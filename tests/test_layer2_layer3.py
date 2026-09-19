@@ -2,6 +2,7 @@
 Unit tests for Layer 2 Classical Forensics (ELA & DCT) and Layer 3 Noise Forensics.
 """
 
+import numpy as np
 import pytest
 from core.internal.synthetic_slip_generator import SyntheticSlipGenerator
 from core.forensics.layer2_classical import Layer2ClassicalForensics
@@ -45,6 +46,26 @@ def test_layer3_noise_forensics():
     assert "anomaly_score" in res
     assert "mean_noise_variance" in res
     assert "noise_heatmap_base64" in res
+
+
+def test_layer3_prnu_sensor_fingerprint():
+    generator = SyntheticSlipGenerator(width=360, height=620)
+    auth_img, _ = generator.generate_authentic_slip(bank_code="BOC")
+
+    l3 = Layer3NoiseForensics()
+    gray = np.array(auth_img.convert("L"), dtype=np.float32)
+    dwt = l3.extract_dwt_noise_residual(gray)
+    prnu = l3.compute_prnu_similarity(gray)
+
+    assert dwt.shape == gray.shape
+    assert "cross_correlation" in prnu
+    assert "sensor_like" in prnu
+    assert prnu["sensor_like"] is True
+
+    flat = np.full((200, 200), 180.0, dtype=np.float32)
+    flat_prnu = l3.compute_prnu_similarity(flat)
+    assert flat_prnu["sensor_like"] is False
+
 
 def test_unified_forensic_engine():
     generator = SyntheticSlipGenerator(width=400, height=700)
