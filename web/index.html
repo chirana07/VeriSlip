@@ -128,6 +128,19 @@
               <input type="text" id="ref-input" class="form-input" placeholder="e.g. TXN1098234812">
             </div>
 
+            <section class="voice-audit" aria-labelledby="voice-audit-title">
+              <div class="voice-audit-heading">
+                <div><span class="section-label">Hands-free mode</span><h3 id="voice-audit-title">Voice audit</h3></div>
+                <button type="button" class="voice-help-btn" id="btn-voice-help" aria-haspopup="dialog">Command help</button>
+              </div>
+              <div class="voice-command-row">
+                <input type="text" id="voice-command-input" class="form-input" aria-label="Voice audit command" placeholder="Verify ComBank 15,000 reference 4821">
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-run-voice-command">Run</button>
+              </div>
+              <button type="button" class="btn btn-secondary btn-block btn-sm" id="btn-voice-listen" aria-pressed="false">🎙 Start listening</button>
+              <p id="voice-status" class="voice-status" role="status" aria-live="polite">Use voice or type the same command. A loaded slip is required.</p>
+            </section>
+
             <button type="button" class="btn btn-primary btn-block" id="btn-run-scan">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="11" cy="11" r="8"/>
@@ -720,7 +733,18 @@
   </aside>
 
   <div id="toast-container" class="toast-container"></div>
+  <dialog id="voice-help-dialog" class="voice-help-dialog" aria-labelledby="voice-help-title">
+    <form method="dialog">
+      <button class="voice-help-close" aria-label="Close voice command help">&times;</button>
+      <h2 id="voice-help-title">Voice audit commands</h2>
+      <p>Say or type: <strong>Verify [bank] [amount] reference [number]</strong></p>
+      <p>Example: <code>Verify ComBank 15,000 reference 4821</code></p>
+      <p>Supported names include ComBank, Sampath, BOC, HNB, People's Bank, DFCC, Seylan, NTB and FriMi.</p>
+      <p>The command fills the bank and reference controls, then runs the same secure forensic scan as the Analyze button. If voice recognition is unavailable, use the command field.</p>
+    </form>
+  </dialog>
   <script src="/static/js/triage_shortcuts.js"></script>
+  <script src="/static/js/voice_audit.js"></script>
   <script src="/static/js/app.js"></script>
 </body>
 </html>
