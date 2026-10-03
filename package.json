@@ -1,0 +1,13 @@
+{
+  "name": "verislip-zk-circuits",
+  "private": true,
+  "scripts": {
+    "zk:setup": "node crypto/node/build-dev-setup.mjs",
+    "zk:test": "npm run zk:setup && node --test crypto/node/tests/*.test.mjs"
+  },
+  "dependencies": {
+    "circomlib": "2.0.5",
+    "circomlibjs": "0.1.7",
+    "snarkjs": "0.7.6"
+  }
+}
