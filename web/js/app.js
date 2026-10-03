@@ -881,7 +881,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>
           <div class="file-cell">
             <div class="file-icon" aria-hidden="true">DOC</div>
-            <span>${item.filename}</span>
+            <span class="batch-file-name"></span>
           </div>
         </td>
         <td><strong>${item.bank_name || item.detected_bank}</strong></td>
@@ -900,6 +900,10 @@ document.addEventListener("DOMContentLoaded", () => {
           <button class="btn-mini btn-row-cert" data-idx="${idx}">Download PDF</button>
         </td>
       `;
+
+      // Filenames originate in multipart headers. Keep display text out of
+      // innerHTML even though the API also replaces it with an internal label.
+      tr.querySelector(".batch-file-name").textContent = item.filename;
 
       batchTableBody.appendChild(tr);
     });

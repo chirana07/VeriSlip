@@ -11,6 +11,7 @@ from fastapi.responses import FileResponse
 from api.middleware.request_tracing import RequestTracingMiddleware
 from api.middleware.rate_limiter import ApiKeyRateLimitMiddleware
 from api.middleware.prometheus_metrics import PrometheusMetricsMiddleware
+from api.middleware.upload_security import UploadBodyLimitMiddleware
 from api.routes.verify import router as verify_router
 from api.routes.live_scanner import router as live_scanner_router
 from api.routes.webhook_whatsapp import router as whatsapp_router
@@ -53,6 +54,10 @@ app.add_middleware(
         "Retry-After",
     ],
 )
+
+# Enforce upload body limits before multipart/JSON parsers can spool or allocate
+# attacker-controlled request bodies. Route-level per-file checks remain active.
+app.add_middleware(UploadBodyLimitMiddleware)
 
 # Added last so tracing also wraps rate-limit and CORS short-circuit responses.
 app.add_middleware(RequestTracingMiddleware)

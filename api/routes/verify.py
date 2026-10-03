@@ -48,13 +48,21 @@ class ForensicAnalysisError(RuntimeError):
 
 
 async def _read_bounded_upload(file: UploadFile) -> bytes:
-    """Read at most one byte beyond the public upload limit."""
-    contents = await file.read(MAX_IMAGE_UPLOAD_BYTES + 1)
-    if len(contents) > MAX_IMAGE_UPLOAD_BYTES:
-        raise ImageValidationError(
-            "Upload exceeds the permitted size.", status_code=413
-        )
-    return contents
+    """Read a bounded upload and promptly close its secure spool handle."""
+    try:
+        contents = await file.read(MAX_IMAGE_UPLOAD_BYTES + 1)
+        if len(contents) > MAX_IMAGE_UPLOAD_BYTES:
+            raise ImageValidationError(
+                "Upload exceeds the permitted size.", status_code=413
+            )
+        return contents
+    finally:
+        await file.close()
+
+
+def _batch_upload_label(index: int) -> str:
+    """Return an internal display identifier instead of an untrusted filename."""
+    return f"upload_{index:03d}"
 
 
 def _is_pdf(contents: bytes) -> bool:
@@ -276,8 +284,8 @@ async def batch_verify_slips(
     risk_cnt = 0
     total_risk = 0.0
 
-    for f in files:
-        fname = f.filename or "unknown_slip.jpg"
+    for index, f in enumerate(files, start=1):
+        fname = _batch_upload_label(index)
         try:
             contents = await _read_bounded_upload(f)
             pil_img = await run_in_threadpool(_decode_document, contents)
