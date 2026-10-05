@@ -45,9 +45,9 @@ class ScreenMoireDetector:
 
     def __init__(
         self,
-        min_ring_ratio: float = 0.01,
-        min_peak_ratio: float = 10.0,
-        min_angular_entropy: float = 0.18,
+        min_ring_ratio: float = 0.50,
+        min_peak_ratio: float = 120.0,
+        min_angular_entropy: float = 0.20,
     ) -> None:
         self.min_ring_ratio = min_ring_ratio
         self.min_peak_ratio = min_peak_ratio
@@ -122,9 +122,9 @@ class ScreenMoireDetector:
         # Plain screenshots / paper scans have low high-frequency ring energy and a
         # more localized spectral distribution.
         confidence = (
-            0.50 * np.clip((moire_ratio - 0.002) / 0.03, 0.0, 1.0)
-            + 0.35 * np.clip((peak_ratio - 5.0) / 60.0, 0.0, 1.0)
-            + 0.15 * np.clip((angular_entropy - self.min_angular_entropy) / 0.7, 0.0, 1.0)
+            0.50 * np.clip((moire_ratio - 0.30) / 0.40, 0.0, 1.0)
+            + 0.35 * np.clip((peak_ratio - 75.0) / 200.0, 0.0, 1.0)
+            + 0.15 * np.clip((angular_entropy - self.min_angular_entropy) / 0.6, 0.0, 1.0)
         )
         confidence = float(np.clip(confidence, 0.0, 1.0))
 
@@ -134,9 +134,7 @@ class ScreenMoireDetector:
             and angular_entropy >= self.min_angular_entropy
         )
 
-        # When the spectrum is very strong but not yet above the threshold, still expose
-        # the confidence signal without hard-failing the detector.
-        if not is_screen_recapture and confidence > 0.72:
+        if not is_screen_recapture and confidence > 0.75:
             is_screen_recapture = True
 
         return {

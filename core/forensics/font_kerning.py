@@ -101,27 +101,39 @@ class CharacterAlignmentValidator:
                     continue
 
                 baselines = [b[4] for b in valid]
-                diffs = [abs(baselines[i + 1] - baselines[i]) for i in range(len(baselines) - 1)]
-                max_jump = max(diffs) if diffs else 0.0
+                med_base = float(np.median(baselines))
+                lining_glyphs = [b for b in valid if (b[4] - med_base) <= 2.5]
+                if len(lining_glyphs) >= 4:
+                    l_baselines = [b[4] for b in lining_glyphs]
+                    diffs = [abs(l_baselines[i + 1] - l_baselines[i]) for i in range(len(l_baselines) - 1)]
+                    max_jump = max(diffs) if diffs else 0.0
+                else:
+                    max_jump = 0.0
 
                 x_starts = [b[0] for b in valid]
                 widths = [b[2] for b in valid]
                 width_variance_ratio = float(np.std(widths)) / max(float(np.median(widths)), 1.0)
-                if len(valid) >= 2:
+                if len(valid) >= 3:
                     spacing = [x_starts[i + 1] - (x_starts[i] + widths[i]) for i in range(len(valid) - 1)]
                     if spacing:
                         med_spacing = float(np.median(spacing))
-                        spacing_outlier = max(abs(s - med_spacing) / max(med_spacing, 1.0) for s in spacing)
+                        # Isolate intra-word character spacing from natural inter-word spaces
+                        intra_spacing = [s for s in spacing if s < max(5.0, med_spacing * 2.2)]
+                        if len(intra_spacing) >= 3:
+                            med_intra = float(np.median(intra_spacing))
+                            spacing_outlier = max(abs(s - med_intra) / max(med_intra, 1.0) for s in intra_spacing)
+                        else:
+                            spacing_outlier = 0.0
                     else:
                         spacing_outlier = 0.0
                 else:
                     spacing_outlier = 0.0
 
                 baseline_alert = max_jump >= self.baseline_jump_threshold
-                spacing_alert = width_variance_ratio <= 0.75 and spacing_outlier >= 1.5 and max_jump >= self.baseline_jump_threshold * 0.5
+                spacing_alert = width_variance_ratio <= 0.50 and spacing_outlier >= 3.0 and max_jump >= 3.5
 
                 if baseline_alert or spacing_alert:
-                    score = min(0.9, 0.45 + (max_jump / 8.0) * 0.35 + max(0.0, spacing_outlier - 0.15) * 0.40)
+                    score = min(0.65, 0.40 + (max_jump / 10.0) * 0.20 + min(0.15, spacing_outlier * 0.03))
                     reason = (
                         f"Glyph baseline shift of {max_jump:.1f}px and kerning variance of {spacing_outlier:.2f}"
                         if baseline_alert

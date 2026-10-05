@@ -23,8 +23,10 @@ manual dispatch is run.
 
 The deploy workflow has read-only repository permission, never prints the hook,
 uses bounded HTTP timeouts, and verifies that `/health` returns the expected
-healthy payload. Application credentials remain exclusively in Render's secret
-store.
+healthy payload. When staging secrets are not yet configured in the repository,
+automatic runs gracefully skip deployment to keep CI green, while explicit manual
+dispatches validate configuration and report missing values. Application
+credentials remain exclusively in Render's secret store.
 
 ## Deployment and verification
 

@@ -72,7 +72,8 @@ class FontAntiAliasingAnalyzer:
 
             red, green, blue = (glyph_rgb[:, :, channel] for channel in range(3))
             fringe_map = np.abs(red - blue) / (green + 1.0)
-            fringe_ratio = float(np.median(fringe_map[edge_band]))
+            fringe_mask = transition if np.any(transition) else edge_band
+            fringe_ratio = float(np.median(fringe_map[fringe_mask]))
             profiles.append(
                 {
                     "box": [x, y, width, height],

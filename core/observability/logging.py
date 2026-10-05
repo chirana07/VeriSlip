@@ -146,4 +146,5 @@ def configure_json_logging() -> None:
         handler._verislip_json = True  # type: ignore[attr-defined]
         logger.addHandler(handler)
     logger.setLevel(logging.INFO)
-    logger.propagate = False
+    logger.propagate = True
+

@@ -687,7 +687,7 @@ document.addEventListener("DOMContentLoaded", () => {
         reference_no: refInput.value.trim() || "N/A"
       };
 
-      const res = await fetch("/api/v1/report/audit-pdf", {
+      const res = await protectedFetch("/api/v1/report/audit-pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -813,7 +813,7 @@ document.addEventListener("DOMContentLoaded", () => {
     files.forEach(f => formData.append("files", f));
 
     try {
-      const res = await fetch("/api/v1/batch-verify", {
+      const res = await protectedFetch("/api/v1/batch-verify", {
         method: "POST",
         body: formData
       });
@@ -933,7 +933,7 @@ document.addEventListener("DOMContentLoaded", () => {
             reference_no: "BATCH-AUDIT-" + idx
           };
 
-          const res = await fetch("/api/v1/report/audit-pdf", {
+          const res = await protectedFetch("/api/v1/report/audit-pdf", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
@@ -1044,7 +1044,7 @@ document.addEventListener("DOMContentLoaded", () => {
     waChatBody.scrollTop = waChatBody.scrollHeight;
 
     try {
-      const waRes = await fetch("/api/v1/webhook/whatsapp", {
+      const waRes = await protectedFetch("/api/v1/webhook/whatsapp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -1057,7 +1057,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const waData = await waRes.json();
       if (typingElem.parentNode) waChatBody.removeChild(typingElem);
 
-      let formattedReply = waData.reply_text.replace(/\n/g, "<br>");
+      if (!waRes.ok) {
+        const errorMsg = waData.detail || `HTTP ${waRes.status}: Unable to process slip.`;
+        appendWaMessage("received", `<strong>⚠️ Shield Alert:</strong> ${errorMsg}`);
+        return;
+      }
+
+      let formattedReply = (waData.reply_text || "Analysis completed without response text.").replace(/\n/g, "<br>");
       appendWaMessage("received", formattedReply);
     } catch (err) {
       if (typingElem.parentNode) waChatBody.removeChild(typingElem);
@@ -1137,7 +1143,7 @@ document.addEventListener("DOMContentLoaded", () => {
         human_action: action,
         amount: currentResults.field_predictions?.amount || null,
       };
-      const resp = await fetch("/api/v1/triage/feedback", {
+      const resp = await protectedFetch("/api/v1/triage/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

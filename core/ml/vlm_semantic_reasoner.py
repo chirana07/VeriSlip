@@ -169,18 +169,11 @@ class LightweightVisionLanguageReasoner:
                     })
                     findings.append("A transaction date field does not conform to a valid bank-processing format.")
                     break
-                if parsed.weekday() >= 5:
-                    violations.append({
-                        "type": "WEEKEND_TRANSACTION",
-                        "severity": "low",
-                        "evidence": "A financial transfer was scheduled on a weekend, which should be treated as an edge-case alert.",
-                    })
-                    findings.append("Transaction date falls on a weekend, requiring additional verification.")
-                    break
 
         anomaly_score = 0.0
         if violations:
-            anomaly_score = min(0.98, 0.42 + 0.12 * len(violations))
+            severity_weights = {"high": 0.45, "medium": 0.20, "low": 0.05}
+            anomaly_score = min(0.98, sum(severity_weights.get(v.get("severity"), 0.15) for v in violations))
 
         structured = {
             "overall_consistency": not bool(violations),
@@ -207,7 +200,7 @@ class LightweightVisionLanguageReasoner:
         bank = bank_code.upper()
 
         bank_prefixes = {
-            "COMBANK": {"CB", "CB", "TXN"},
+            "COMBANK": {"CB", "TXN"},
             "SAMPATH": {"SV", "SAMP", "SP"},
             "BOC": {"BOC", "DIGI"},
             "HNB": {"HNB", "SOLO"},
@@ -225,22 +218,75 @@ class LightweightVisionLanguageReasoner:
         return any(prefix.startswith(p) for p in expected_prefixes) or prefix_start in expected_prefixes
 
     def _try_parse_date(self, text: str):
-        for pattern in [
+        if not text:
+            return None
+        text_clean = text.strip()
+        from datetime import datetime
+
+        patterns = [
+            # Formats with seconds
+            "%d/%m/%Y %H:%M:%S",
+            "%d-%m-%Y %H:%M:%S",
+            "%Y/%m/%d %H:%M:%S",
+            "%Y-%m-%d %H:%M:%S",
+            "%d.%m.%Y %H:%M:%S",
+            "%d/%m/%Y %I:%M:%S %p",
+            "%d-%m-%Y %I:%M:%S %p",
+            "%d/%m/%Y, %H:%M:%S",
+            "%d-%m-%Y, %H:%M:%S",
+            "%d %b %Y %H:%M:%S",
+            "%d %B %Y %H:%M:%S",
+            "%d-%b-%Y %H:%M:%S",
+            "%d-%B-%Y %H:%M:%S",
+            "%b %d, %Y %H:%M:%S",
+            "%B %d, %Y %H:%M:%S",
+            # Formats with minutes
+            "%d/%m/%Y %H:%M",
+            "%d-%m-%Y %H:%M",
+            "%Y/%m/%d %H:%M",
+            "%Y-%m-%d %H:%M",
+            "%d.%m.%Y %H:%M",
+            "%d/%m/%Y %I:%M %p",
+            "%d-%m-%Y %I:%M %p",
+            "%d/%m/%Y, %H:%M",
+            "%d-%m-%Y, %H:%M",
+            "%d %b %Y %H:%M",
+            "%d %B %Y %H:%M",
+            "%d-%b-%Y %H:%M",
+            "%d-%B-%Y %H:%M",
+            "%b %d, %Y %H:%M",
+            "%B %d, %Y %H:%M",
+            # Date only
             "%d/%m/%Y",
             "%d-%m-%Y",
             "%Y/%m/%d",
             "%Y-%m-%d",
-            "%d/%m/%Y %H:%M",
-            "%d-%m-%Y %H:%M",
-            "%d/%m/%Y %I:%M %p",
-            "%d-%m-%Y %I:%M %p",
-        ]:
+            "%d.%m.%Y",
+            "%d %b %Y",
+            "%d %B %Y",
+            "%d-%b-%Y",
+            "%d-%B-%Y",
+            "%b %d, %Y",
+            "%B %d, %Y",
+        ]
+        for pattern in patterns:
             try:
-                from datetime import datetime
-
-                return datetime.strptime(text.strip(), pattern)
+                return datetime.strptime(text_clean, pattern)
             except ValueError:
                 continue
+
+        # Extract date-like substring if enclosed by other text
+        date_sub = re.search(
+            r"(\d{1,4}[/.-]\w+[/.-]\d{1,4}(?:\s*,?\s*\d{1,2}:\d{2}(?::\d{2})?(?:\s*[AaPp][Mm])?)?)",
+            text_clean,
+        )
+        if date_sub:
+            sub = date_sub.group(1).strip()
+            for pattern in patterns:
+                try:
+                    return datetime.strptime(sub, pattern)
+                except ValueError:
+                    continue
         return None
 
     def evaluate(

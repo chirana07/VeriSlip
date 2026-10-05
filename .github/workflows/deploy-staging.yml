@@ -24,19 +24,31 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Validate deployment configuration
+        id: validate
         env:
           DEPLOY_HOOK: ${{ secrets.RENDER_STAGING_DEPLOY_HOOK_URL }}
           STAGING_URL: ${{ vars.VERISLIP_STAGING_URL }}
         run: |
-          test -n "$DEPLOY_HOOK" || { echo "Missing RENDER_STAGING_DEPLOY_HOOK_URL"; exit 1; }
-          test -n "$STAGING_URL" || { echo "Missing VERISLIP_STAGING_URL"; exit 1; }
+          if [ -z "$DEPLOY_HOOK" ] || [ -z "$STAGING_URL" ]; then
+            if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+              test -n "$DEPLOY_HOOK" || { echo "Missing RENDER_STAGING_DEPLOY_HOOK_URL"; exit 1; }
+              test -n "$STAGING_URL" || { echo "Missing VERISLIP_STAGING_URL"; exit 1; }
+            else
+              echo "Staging deployment secrets not configured in environment. Skipping automatic staging deployment."
+              echo "configured=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+          echo "configured=true" >> "$GITHUB_OUTPUT"
 
       - name: Trigger Render deployment
+        if: steps.validate.outputs.configured == 'true'
         env:
           DEPLOY_HOOK: ${{ secrets.RENDER_STAGING_DEPLOY_HOOK_URL }}
         run: curl --fail --silent --show-error --max-time 30 --request POST "$DEPLOY_HOOK" >/dev/null
 
       - name: Wait for healthy staging service
+        if: steps.validate.outputs.configured == 'true'
         env:
           STAGING_URL: ${{ vars.VERISLIP_STAGING_URL }}
         run: |

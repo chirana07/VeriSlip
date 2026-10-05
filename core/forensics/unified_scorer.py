@@ -175,11 +175,11 @@ class VeriSlipForensicEngine:
             weighted_risk,
             l1_sem_res["anomaly_score"] if l1_sem_res["is_anomalous"] else 0.0,
             l2_occ_res["anomaly_score"] * 0.95 if (l2_occ_res["is_anomalous"] and l2_occ_corroborated) else 0.0,
-            l2_res["anomaly_score"] * 0.90 if l2_res["anomaly_score"] > 0.30 else 0.0,
-            l3_res["anomaly_score"] * 0.90 if l3_res["anomaly_score"] > 0.35 else 0.0,
+            l2_res["anomaly_score"] * 0.90 if l2_res.get("is_anomalous", False) else 0.0,
+            l3_res["anomaly_score"] * 0.90 if l3_res.get("is_anomalous", False) else 0.0,
             l4_res["anomaly_score"] * 0.92 if (l4_res["anomaly_score"] > 0.70 and l4_corroborated) else 0.0,
-            font_res["anomaly_score"] * 0.85 if font_res["anomaly_score"] > 0.65 else 0.0,
-            vlm_res["anomaly_score"] * 0.95 if vlm_res["is_anomalous"] else 0.0,
+            font_res["anomaly_score"] * 0.85 if (font_res.get("is_anomalous", False) and font_res["anomaly_score"] > 0.65) else 0.0,
+            vlm_res["anomaly_score"] * 0.95 if (vlm_res["is_anomalous"] and vlm_res["anomaly_score"] >= 0.45) else 0.0,
         ]
         composite_risk = max(peak_signals)
 
@@ -195,7 +195,7 @@ class VeriSlipForensicEngine:
         if l2_occ_res["is_anomalous"] and l2_occ_corroborated:
             composite_risk = max(composite_risk, l2_occ_res["anomaly_score"])
 
-        if vlm_res["is_anomalous"]:
+        if vlm_res["is_anomalous"] and vlm_res["anomaly_score"] >= 0.45:
             composite_risk = max(composite_risk, vlm_res["anomaly_score"])
 
         # Collect candidate bounding boxes from all layers
@@ -238,16 +238,18 @@ class VeriSlipForensicEngine:
         if final_boxes:
             top_box_conf = max(b.get("confidence", 0.5) for b in final_boxes)
             has_corroborating_evidence = (
-                l2_res["anomaly_score"] > 0.15 or
-                l3_res["anomaly_score"] > 0.20 or
+                l2_res.get("is_anomalous", False) or
+                l2_res["anomaly_score"] > 0.32 or
+                l3_res.get("is_anomalous", False) or
+                l3_res["anomaly_score"] > 0.35 or
                 l4_res["anomaly_score"] > 0.65 or
                 l1_sem_res["is_anomalous"] or
                 l1_res["metadata_analysis"]["is_suspicious"] or
-                vlm_res["is_anomalous"]
+                (vlm_res["is_anomalous"] and vlm_res["anomaly_score"] >= 0.45)
             )
             if top_box_conf > 0.70 and has_corroborating_evidence:
                 composite_risk = max(composite_risk, 0.55 + 0.35 * top_box_conf)
-            elif top_box_conf > 0.85 and (l2_res["anomaly_score"] > 0.12 or l3_res["anomaly_score"] > 0.15):
+            elif top_box_conf > 0.85 and (l2_res.get("is_anomalous", False) or l3_res.get("is_anomalous", False)):
                 composite_risk = max(composite_risk, 0.60)
 
         # Calibrated risk percentage (0 to 100%)

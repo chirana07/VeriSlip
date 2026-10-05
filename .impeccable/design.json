@@ -1,39 +1,136 @@
 {
-  "schema": 1,
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-05T10:52:38.650Z",
+  "title": "Design System: VeriSlip Forensic Console",
   "direction": "forensic-score",
   "mode": "operate",
-  "tokens": {
-    "color": {
-      "paper": "#f4f6f8",
-      "surface": "#ffffff",
-      "surfaceMuted": "#edf1f5",
-      "surfaceDark": "#172131",
-      "ink": "#18212f",
-      "inkSoft": "#4f5d70",
-      "muted": "#758195",
-      "line": "#d9e0e8",
-      "cobalt": "#2457d6",
-      "teal": "#087f6b",
-      "amber": "#a96c00",
-      "rose": "#bd3b49",
-      "violet": "#6756b1"
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Operational Paper Canvas",
+        "canonical": "#f4f6f8"
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Clean Surface",
+        "canonical": "#ffffff"
+      },
+      "surface-muted": {
+        "role": "neutral",
+        "displayName": "Muted Work Surface",
+        "canonical": "#edf1f5"
+      },
+      "surface-dark": {
+        "role": "neutral",
+        "displayName": "Terminal Chrome",
+        "canonical": "#172131"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Primary Ink",
+        "canonical": "#18212f"
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Soft Reading Ink",
+        "canonical": "#4f5d70"
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Accessible Muted Labels",
+        "canonical": "#5e6c84"
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Precision Border",
+        "canonical": "#d9e0e8"
+      },
+      "cobalt": {
+        "role": "primary",
+        "displayName": "Forensic Action Cobalt",
+        "canonical": "#2457d6"
+      },
+      "teal": {
+        "role": "semantic",
+        "displayName": "Verified Authentic Teal",
+        "canonical": "#087f6b"
+      },
+      "amber": {
+        "role": "semantic",
+        "displayName": "Caution / Suspicious Amber",
+        "canonical": "#a96c00"
+      },
+      "rose": {
+        "role": "semantic",
+        "displayName": "Flagged Forgery Rose",
+        "canonical": "#bd3b49"
+      },
+      "violet": {
+        "role": "semantic",
+        "displayName": "Deep Residual Violet",
+        "canonical": "#6756b1"
+      }
     },
-    "radius": {
-      "sm": "8px",
-      "md": "12px",
-      "lg": "16px"
+    "typographyMeta": {
+      "ui": {
+        "displayName": "System Sans",
+        "purpose": "Dependable operational UI readability"
+      },
+      "mono": {
+        "displayName": "JetBrains Mono",
+        "purpose": "Measurements, risk scores, forensic hashes, and code samples"
+      }
     },
-    "font": {
-      "ui": "ui-sans-serif",
-      "mono": "JetBrains Mono"
+    "shadows": [
+      {
+        "name": "shadow-sm",
+        "value": "0 1px 2px rgba(18, 31, 48, 0.05), 0 8px 20px rgba(18, 31, 48, 0.04)",
+        "purpose": "Card elevation and containment"
+      },
+      {
+        "name": "shadow-md",
+        "value": "0 14px 34px rgba(18, 31, 48, 0.10)",
+        "purpose": "Drawer and phone frame elevation"
+      }
+    ],
+    "motion": [
+      {
+        "name": "enter",
+        "value": "220ms ease-out",
+        "purpose": "View transition and panel activation"
+      },
+      {
+        "name": "hover",
+        "value": "180ms ease",
+        "purpose": "Interactive element feedback"
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "640px"
+      },
+      {
+        "name": "tablet",
+        "value": "980px"
+      },
+      {
+        "name": "desktop-compact",
+        "value": "1250px"
+      },
+      {
+        "name": "desktop-wide",
+        "value": "1600px"
+      }
+    ],
+    "surfaces": {
+      "cockpit": "ingestion -> evidence -> verdict",
+      "batch": "summary -> audit ledger",
+      "whatsapp": "workflow explanation -> live chat simulation",
+      "api": "endpoint inventory -> copyable examples",
+      "pricing": "plan comparison -> trust evidence -> FAQ",
+      "history": "authenticated records drawer"
     }
-  },
-  "surfaces": {
-    "cockpit": "ingestion -> evidence -> verdict",
-    "batch": "summary -> audit ledger",
-    "whatsapp": "workflow explanation -> live chat simulation",
-    "api": "endpoint inventory -> copyable examples",
-    "pricing": "plan comparison -> trust evidence -> FAQ",
-    "history": "authenticated records drawer"
   }
 }
