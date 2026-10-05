@@ -155,20 +155,20 @@ class VeriSlipForensicEngine:
         # Decisive anomalies override linear dilution, preventing missed tampering
         l4_corroborated = (
             len(l4_res.get("detected_regions", [])) > 0 or
-            l1_res["anomaly_score"] > 0.15 or
-            l2_res["anomaly_score"] > 0.15 or
-            l3_res["anomaly_score"] > 0.20 or
-            font_res["anomaly_score"] > 0.40 or
-            l1_sem_res["anomaly_score"] > 0.40 or
+            l1_res["anomaly_score"] > 0.35 or
+            l2_res.get("is_anomalous", False) or
+            l3_res.get("is_anomalous", False) or
+            font_res.get("is_anomalous", False) or
+            l1_sem_res["is_anomalous"] or
             vlm_res["is_anomalous"]
         )
         l2_occ_corroborated = (
             l1_sem_res["is_anomalous"] or
             l1_res["metadata_analysis"]["is_suspicious"] or
-            l2_res["anomaly_score"] > 0.20 or
-            l3_res["anomaly_score"] > 0.25 or
-            l4_res["anomaly_score"] > 0.65 or
-            font_res["anomaly_score"] > 0.40 or
+            l2_res.get("is_anomalous", False) or
+            l3_res.get("is_anomalous", False) or
+            l4_res["anomaly_score"] > 0.70 or
+            font_res.get("is_anomalous", False) or
             vlm_res["is_anomalous"]
         )
         peak_signals = [

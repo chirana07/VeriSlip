@@ -29,11 +29,15 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PORT=8000 \
     PATH=/home/verislip/.local/bin:$PATH
 
-# Install minimal C runtime libraries for OpenCV headless and PyPDFium2
+# Install minimal C runtime libraries for OpenCV headless, PyPDFium2, Tesseract OCR (Sinhala & Tamil), and Node for ZK proof verification
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1 \
     libglib2.0-0 \
     curl \
+    tesseract-ocr \
+    tesseract-ocr-sin \
+    tesseract-ocr-tam \
+    nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 # Create unprivileged system user for hardened security isolation
