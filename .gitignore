@@ -18,6 +18,14 @@ datasets/real_calibration/forgeries_augmented/*
 datasets/real_calibration/README.md
 venv/
 .env
+node_modules/
+circuits/build/
+circuits/artifacts/
+*.ptau
+*.r1cs
+*.sym
+*.wasm
+*.zkey
 
 # Weights & Dataset Artifacts
 weights/*.pt

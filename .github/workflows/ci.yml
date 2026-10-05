@@ -33,3 +33,23 @@ jobs:
           PYTHONPATH: .
         run: |
           python -m pytest tests/ -v
+
+  zk-circuit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install official Circom compiler
+        run: |
+          curl --fail --location --output /usr/local/bin/circom https://github.com/iden3/circom/releases/download/v2.2.3/circom-linux-amd64
+          chmod +x /usr/local/bin/circom
+          circom --version
+      - name: Install circuit dependencies
+        run: npm ci --ignore-scripts
+      - name: Build and test real Groth16 proofs
+        run: npm run zk:test

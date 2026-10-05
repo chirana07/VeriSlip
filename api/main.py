@@ -24,6 +24,7 @@ from api.routes.triage_feedback import router as triage_router
 from api.routes.active_learning import router as active_learning_router
 from api.routes.clearing import router as clearing_router
 from api.routes.threat_intel import router as threat_intel_router
+from api.routes.crypto import router as crypto_router
 from core.observability.logging import configure_json_logging
 from core.observability.metrics import get_metrics_payload, CONTENT_TYPE_LATEST
 from starlette.responses import Response
@@ -75,6 +76,7 @@ app.include_router(triage_router)
 app.include_router(active_learning_router)
 app.include_router(clearing_router)
 app.include_router(threat_intel_router)
+app.include_router(crypto_router)
 
 @app.get("/health")
 def health_check():
