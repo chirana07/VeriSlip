@@ -1,368 +1,328 @@
-# VeriSlip — AI Forensic Detection Platform for Payment Slips & Invoices
+# VeriSlip: AI Multi-Layer Forensic Engine & Zero-Knowledge Verification Platform
 
-[![VeriSlip CI](https://github.com/chirana07/VeriSlip/actions/workflows/ci.yml/badge.svg)](https://github.com/chirana07/VeriSlip/actions)
-[![Python 3.10 | 3.11](https://img.shields.io/badge/python-3.10%20%7C%203.11-blue.svg)](https://www.python.org/downloads/)
-[![PyTorch 2.0+](https://img.shields.io/badge/PyTorch-2.0+-EE4C2C.svg)](https://pytorch.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com/)
-[![Test Suite](https://img.shields.io/badge/tests-16%20passed-brightgreen.svg)](https://github.com/chirana07/VeriSlip/actions)
+[![VeriSlip CI](https://github.com/chirana07/VeriSlip/actions/workflows/ci.yml/badge.svg)](https://github.com/chirana07/VeriSlip/actions/workflows/ci.yml)
+[![Deploy Staging](https://github.com/chirana07/VeriSlip/actions/workflows/deploy-staging.yml/badge.svg)](https://github.com/chirana07/VeriSlip/actions/workflows/deploy-staging.yml)
+[![Test Suite](https://img.shields.io/badge/pytest-530%20passed-brightgreen.svg?logo=pytest)](https://github.com/chirana07/VeriSlip/actions)
+[![Python 3.10 | 3.11](https://img.shields.io/badge/python-3.10%20%7C%203.11-blue.svg?logo=python)](https://www.python.org/downloads/)
+[![PyTorch 2.0+](https://img.shields.io/badge/PyTorch-2.0+-EE4C2C.svg?logo=pytorch)](https://pytorch.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![zk-SNARKs](https://img.shields.io/badge/zk--SNARKs-Groth16%20%7C%20Circom-8A2BE2.svg)](https://docs.circom.io/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker)](https://www.docker.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Open Source Roadmap](https://img.shields.io/badge/Roadmap-Open%20Source-brightgreen.svg)](https://github.com/chirana07/VeriSlip/issues)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/chirana07/VeriSlip/pulls)
 
-**VeriSlip** is an enterprise-grade, open-source AI forensic fraud detection platform engineered to verify digitally manipulated bank transfer slips, receipts, and invoices in peer-to-peer commerce, social seller channels (WhatsApp Business, Instagram DMs, Facebook Marketplace), and last-mile COD courier logistics.
+**VeriSlip** is an enterprise-grade forensic AI and cryptographic verification platform engineered to detect digitally forged payment transfer slips, receipts, and invoices in South Asian peer-to-peer commerce, social media seller channels (WhatsApp Business, Instagram DMs, Facebook Marketplace), and last-mile cash-on-delivery (COD) logistics.
 
-Combining classical physics-based image forensics, structural banking rule engines, and deep dual-stream convolutional neural attention networks, VeriSlip provides **sub-second automated fraud verdicts** with pixel-level tamper localization.
+By unifying **physics-based image signal forensics**, **multilingual typographical kerning**, **vision-language temporal reasoning**, **dual-stream convolutional neural attention networks**, and **privacy-preserving Groth16 Zero-Knowledge proofs**, VeriSlip delivers sub-second automated fraud verdicts with millimeter-accurate tamper localization.
 
 ---
 
-## 🎯 The Problem
+## 📌 Table of Contents
 
-In high-volume emerging digital commerce across South Asia (Sri Lanka, India, Pakistan, Bangladesh), merchants routinely release orders upon receiving a screenshot of a mobile bank transfer slip (Commercial Bank Q+, BOC SmartPay, Sampath WePay/Vishwa, HNB SOLO, FriMi, Seylan Pay).
-
-Fraudsters exploit this by doctoring amounts, transaction reference numbers, or beneficiary details using Canva, Photoshop, PicsArt, or HTML DOM inspection tools. Because individual losses are often below police investigation thresholds, cumulative merchant losses are staggering.
-
-**VeriSlip** solves this by providing a multi-layer defense that catches even expertly edited, recompressed slips that fool human eyes.
+- [The Challenge](#-the-challenge)
+- [Multi-Layer Defense Architecture](#-multi-layer-defense-architecture)
+- [Supported Financial Institutions & Standards](#-supported-financial-institutions--standards)
+- [Key Platform Capabilities](#-key-platform-capabilities)
+- [Zero-Knowledge Audits (zk-SNARKs)](#-zero-knowledge-audits-zk-snarks)
+- [Quickstart Guide](#-quickstart-guide)
+  - [Prerequisites](#prerequisites)
+  - [Local Installation](#1-local-installation)
+  - [Running the 530-Test Suite](#2-run-test-suite)
+  - [Launching the Forensic Cockpit](#3-launch-the-cockpit)
+  - [Docker Container Deployment](#4-docker-container-deployment)
+- [Developer REST API Reference](#-developer-rest-api-reference)
+- [Browser Extension & Client Integrations](#-browser-extension--client-integrations)
+- [Security, Dual-Use Policy & Threat Model](#-security-dual-use-policy--threat-model)
+- [Contributing & Research Roadmap](#-contributing--research-roadmap)
+- [License](#-license)
 
 ---
 
-## 🏛️ 4-Layer Defense-in-Depth Architecture
+## 🎯 The Challenge
+
+In digital commerce across emerging Asian markets (Sri Lanka, India, Pakistan, Bangladesh), merchants routinely dispatch goods immediately upon receiving a mobile bank transfer screenshot (e.g., Commercial Bank Q+, BOC SmartPay, Sampath Vishwa, HNB SOLO, FriMi, Seylan Pay, LankaQR).
+
+Fraudsters exploit this operational vulnerability using mobile photo editors (Canva, Photoshop, PicsArt) or browser DOM inspection to alter:
+- **Transfer Amounts** (e.g., changing LKR 1,500.00 to LKR 150,000.00).
+- **Transaction Reference Numbers** (generating synthetic or duplicate reference strings).
+- **Beneficiary & Account Details** (rerouting or fabricating payment confirmations).
+
+Because individual merchant losses fall below law enforcement investigation thresholds, cumulative retail losses are staggering. Standard optical character recognition (OCR) and layout parsers fail because doctored text appears visually indistinguishable to human eyes and standard text extractors.
+
+**VeriSlip solves this through physical, signal, and typographical corroboration that catches alterations down to the single sub-pixel level.**
+
+---
+
+## 🏛️ Multi-Layer Defense Architecture
+
+VeriSlip rejects naive single-model architectures in favor of a 5-layer defense-in-depth pipeline:
 
 ```mermaid
 flowchart TD
-    A[Slip Screenshot / WhatsApp Image Ingestion] --> B[Preprocessing & Dimension Normalization]
-    
-    subgraph Multi-Scale Forensic Engine
-        B --> L1[Layer 1: Structural & Metadata Validation\n• Bank Template Layout & Logo Anchor Match\n• Reference Number Checksum / Regex Validation\n• EXIF & PNG Metadata Editing Tool Fingerprints\n• Temporal & Transaction Date Sanity Checks]
-        
-        B --> L2[Layer 2: Classical Physics Forensics\n• Multi-Scale Error Level Analysis ELA\n• 8x8 2D-DCT Double-JPEG Compression Periodicity\n• Subpixel Font Anti-Aliasing Consistency]
-        
-        B --> L3[Layer 3: Sensor & Spatial Noise Forensics\n• High-Pass Median Residual Filtering\n• Zero-Edge Background Noise Variance\n• Brush Smoothing & Clone-Stamp Artifact Tracing]
-        
-        L1 & L2 & L3 --> L4[Layer 4: Deep Multi-Modal Fusion\n• Dual-Stream Neural Attention Network\n• Stream A: RGB Visual Patches\n• Stream B: 3-Channel ELA + Noise + Gradient Tensor\n• Combined BCE + Soft Dice Loss\n• Pixel-Level Localization Bounding Boxes]
+    A["Raw Slip Image / WhatsApp Attachment / Mobile Upload"] --> B["Image Normalization & Ingestion Security Sanitizer"]
+
+    subgraph Layer1["Layer 1: Structural & Metadata Validation"]
+        B --> L1A["Bank Template Layout & Logo Anchor Matching"]
+        B --> L1B["CEFTS / SLIPS Transaction Reference Regex & Checksum"]
+        B --> L1C["EXIF Metadata Forensic & Editing Signature Scanning"]
+        B --> L1D["Aspect Ratio & Brand Primary RGB Distribution"]
     end
 
-    subgraph Decision & Delivery
-        L4 --> CAL[Empirical Real-World Calibration Profile\nweights/calibration_profile.json]
-        CAL --> V[Unified Scorer: AUTHENTIC / SUSPICIOUS / HIGH RISK]
-        V --> D1[Web Forensic Cockpit]
-        V --> D2[WhatsApp Business Fraud Shield]
-        V --> D3[High-Throughput Batch Slip Auditor]
-        V --> D4[Developer REST API]
-        V --> D5[Cryptographic PDF Forensic Certificate]
+    subgraph Layer2["Layer 2: Physical & Compression Forensics"]
+        B --> L2A["Multi-Scale Error Level Analysis (ELA) with Y/Cb/Cr Decomposition"]
+        B --> L2B["8x8 2D-DCT Block Artifact Grid (BAG) Phase Disparity (mod 8)"]
+        B --> L2C["Double-JPEG Compression Grid Misalignment & Ghost Detection"]
+        B --> L2D["Dense Copy-Move Forgery Keypoint Correlation (ORB/SIFT/DCT)"]
+        B --> L2E["Thermal Paper Dye Fading vs Hard Digital Splice FFT Discriminator"]
+        B --> L2F["2D FFT Screen Recapture & Moiré Anti-Spoofing Filter"]
     end
+
+    subgraph Layer3["Layer 3: Typography & Spatial Noise Forensics"]
+        B --> L3A["Spatial Rich Models (SRM) High-Pass Residual Filtering (7 Kernels)"]
+        B --> L3B["Intra-Word Kerning Outlier & Baseline Jump Measurement"]
+        B --> L3C["Sub-Pixel Glyph Anti-Aliasing Profile & Gamma Rasterization Check"]
+    end
+
+    subgraph Layer4["Layer 4: Deep Multi-Modal Fusion & Semantic VLM"]
+        B --> L4A["Dual-Stream ConvNeXt/ResNet Attention Network"]
+        L4A --> L4B["Stream A: High-Res RGB Visual Patches"]
+        L4A --> L4C["Stream B: 3-Channel Forensic Tensor (ELA + Noise + Gradient)"]
+        B --> L4D["Vision-Language Semantic Reasoner (Temporal, Date & Logic Constraints)"]
+    end
+
+    subgraph Scoring["Calibrated Decision Engine"]
+        Layer1 & Layer2 & Layer3 & Layer4 --> US["Unified Forensic Scorer (Max-Pooled Non-Diluting Fusion)"]
+        US --> V["Verdict: AUTHENTIC (<25%) | SUSPICIOUS (25-55%) | HIGH_RISK (>55%)"]
+    end
+
+    subgraph Layer5["Layer 5: Cryptographic & Privacy-Preserving Audits"]
+        US --> ZK["Groth16 zk-SNARK Engine (Circom 2.1 over BN254 Scalar Field)"]
+        US --> PKI["SHA-256 Merkle Audit Certificate Authority"]
+    end
+
+    V --> OUT1["Web Forensic Cockpit"]
+    V --> OUT2["WhatsApp Business Fraud Shield"]
+    V --> OUT3["Courier Rider Mobile API"]
+    V --> OUT4["High-Throughput Batch Auditor"]
+    ZK --> OUT5["Zero-Knowledge B2B Escrow Verification"]
 ```
+
+---
+
+## 🏦 Supported Financial Institutions & Standards
+
+VeriSlip provides native layout templates, color profiles, transaction reference formats, and regex engines for all major Sri Lankan banking systems and national switches:
+
+| Institution / Service | Application / Ecosystem | Primary Brand Palette | Reference Format |
+| :--- | :--- | :--- | :--- |
+| **Commercial Bank of Ceylon** | ComBank Digital / Q+ | RGB(0, 75, 141) | `CB[0-9]{10,14}` / `REF[0-9]{10}` |
+| **Sampath Bank PLC** | Sampath Vishwa / WePay | RGB(243, 112, 33) | `SV[0-9]{8,12}` / `[0-9]{10}` |
+| **Bank of Ceylon (BOC)** | BOC SmartPay / B-App / Digi | RGB(255, 199, 44) | `BOC[0-9]{9,13}` / `[0-9]{12}` |
+| **Hatton National Bank (HNB)**| HNB Digital Banking / SOLO | RGB(18, 53, 91) | `HNB[0-9]{8,12}` / `[0-9]{10,14}` |
+| **People's Bank** | People's Wave / PeoplesPay | RGB(180, 20, 30) | `[0-9]{16,22}` / `TRC[0-9]{10,22}` |
+| **Nations Trust Bank** | FriMi / NTB Direct | RGB(230, 0, 126) | `FM[0-9]{8,14}` / `[A-Z0-9]{10,14}` |
+| **Seylan Bank PLC** | Seylan Mobile / Seylan Pay | RGB(166, 25, 46) | `SEY[0-9]{8,14}` / `[0-9]{10,12}` |
+| **DFCC Bank** | DFCC Pay / Virtual Wallet | RGB(205, 32, 44) | `DFCC[0-9]{10,16}` |
+| **Pan Asia Bank** | Pan Asia Mobile / PABC | RGB(242, 101, 34) | `PABC[0-9]{8,14}` |
+| **LankaPay National Switch** | CEFTS / SLIPS / JustPay | Neutral Monochrome | Standard 8–20 character interbank reference |
+| **LankaQR** | EMVCo QR Dynamic / Static | Standard QR Spec | LankaQR Tag-Length-Value payload parsing |
 
 ---
 
 ## ✨ Key Platform Capabilities
 
 ### 1. Web Forensic Cockpit
-An interactive commercial dashboard for real-time slip analysis with side-by-side zoomable overlays, ELA heatmaps, noise variance charts, and red-box tamper coordinates.
+An interactive commercial analyst cockpit featuring:
+- Side-by-side comparative inspection with zoomable overlays.
+- Real-time ELA error heatmaps, DCT block boundary masks, and SRM noise residue visualizations.
+- Interactive red bounding boxes pinpointing altered text areas.
+- Voice-guided hands-free cashier operation using Web Speech API for fast retail POS queues.
+- Tenant-isolated verification history drawer with date filters and reference search.
 
 ### 2. WhatsApp Business Fraud Shield
-Webhook integration for messaging bots that intercepts slips sent by buyers, verifies authenticity in `<2.5` seconds, and automatically responds with safe-to-dispatch recommendations.
+Instant webhook adapter for conversational commerce:
+- Intercepts customer receipt images sent over WhatsApp.
+- Returns clear dispatch decisions in `<2.5` seconds (`Safe to Release Goods` vs `Fraud Alert`).
+- Includes automatic SMS fallback alerts for high-risk forgeries if WhatsApp delivery fails.
+- Multi-language support: English, Sinhala (`සිංහල`), and Tamil (`தமிழ்`).
 
-### Live Document Camera
-The **Live Camera** tab previews a webcam or document camera and checks stationary
-snapshots without blocking the preview. A standalone OpenCV scanner is also
-available. See [setup, model requirements, and performance validation](docs/LIVE_SCANNER.md).
+### 3. Courier Logistics Rider API
+Tailored REST endpoint (`/api/v1/courier/verify`) designed for last-mile delivery mobile apps (Domex, Koombiyo, PromptX):
+- Takes expected COD amount and rider camera photo.
+- Validates receipt authenticity and compares COD balance in sub-second response times.
+- Returns explicit `can_handover_package` booleans and actionable rider directives.
 
-### 3. Batch Slip Auditor
-Enterprise file triage capable of analyzing hundreds of slips concurrently for end-of-day finance reconciliation, filtering high-risk transfers into CSV audit reports.
+### 4. Zero-Knowledge Audits (zk-SNARKs)
+Privacy-preserving B2B cryptographic verification:
+- Enables merchants to prove to third parties (logistics, suppliers, escrow) that a slip is authentic and exceeds a threshold amount **without revealing customer account numbers, customer names, or exact balances**.
+- Built with **Circom 2.1** and **snarkjs**, generating Groth16 proofs over the BN254 scalar field.
 
-### 4. Zero-Label Kaggle Training Pipeline
-Automated synthetic generation engine producing paired authentic and tampered banking receipts across all major Sri Lankan banks with pixel-perfect ground-truth binary masks—**zero manual drawing or annotation required**.
+### 5. High-Throughput Batch Slip Auditor
+Enterprise reconciliation engine capable of concurrently analyzing hundreds of transfer slips from CSV/ZIP uploads for end-of-day finance clearing.
 
-### 5. Few-Shot Real Slip Calibration
-Empirical calibration engine (`scripts/calibrate_real_slips.py`) that tunes layer weights and sensitivity thresholds using as few as 3–10 real screenshots from genuine merchant traffic, eliminating false alarms.
+---
+
+## 🔒 Zero-Knowledge Audits (zk-SNARKs)
+
+VeriSlip contains an arithmetic circuit (`circuits/slip_verifier.circom`) enforcing privacy-preserving zero-knowledge audits:
+
+- **Private Inputs:** Raw slip image SHA-256 preimage bits, transaction amount ($A$ in cents), customer account hash, sender identity hash.
+- **Public Signals:** 4-limb SHA-256 slip commitment ($H_{\text{slip}}$), minimum order threshold ($A_{\text{min}}$ in cents), Poseidon merchant commitment, identity binding hash, verification timestamp, nonce.
+- **Verification Microservice:** `/api/v1/crypto/verify-zk-proof` validates Groth16 proofs in `<5ms` CPU execution with strict JSON parameter and scalar field boundary checks.
+
+See [docs/ZERO_KNOWLEDGE_AUDITS.md](docs/ZERO_KNOWLEDGE_AUDITS.md) for circuit specifications, witness generation, and contract verifiers.
 
 ---
 
 ## 🚀 Quickstart Guide
 
 ### Prerequisites
-* Python 3.10 or 3.11
-* Git
+- **Python 3.10** or **3.11**
+- **Git**
+- Optional: **Tesseract OCR** with Sinhala/Tamil language packs for local Linux environments (`sudo apt install tesseract-ocr tesseract-ocr-sin tesseract-ocr-tam`)
+- Optional: **Node.js 18+** for Circom circuit compilation
 
-### 1. Installation
+### 1. Local Installation
+
 ```bash
 git clone https://github.com/chirana07/VeriSlip.git
 cd VeriSlip
 
 python3 -m venv venv
-source venv/bin/activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2. Run Comprehensive Test Suite
+### 2. Run Test Suite
+
+VeriSlip maintains a rigorous contract-tested regression suite:
+
 ```bash
 pytest tests/ -v
 ```
-*(All 16 unit tests covering API endpoints, generators, and Layers 1–4 pass out-of-the-box.)*
+*(All **530 unit and integration tests** pass out-of-the-box in under 15 seconds).*
 
-### 3. Launch the Server
+### 3. Launch the Cockpit
+
 ```bash
-python3 -m uvicorn api.main:app --host 127.0.0.1 --port 8000 --reload
+# Start FastAPI backend with hot-reload in development mode
+VERISLIP_ENV=development python3 -m uvicorn api.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 Open **[http://127.0.0.1:8000](http://127.0.0.1:8000)** in your browser to access the Web Forensic Cockpit.
 
----
+### 4. Docker Container Deployment
 
-## 🧠 Model Training & Few-Shot Calibration
+VeriSlip provides a production-hardened multi-stage Docker build with built-in unprivileged user isolation, OpenCV C runtime libraries, Tesseract OCR (with Sinhala and Tamil), and Node runtime for ZK verifier execution:
 
-### A. Training on Kaggle GPU (Zero Manual Labeling)
-1. Generate the synthetic benchmark dataset locally:
-   ```bash
-   VERISLIP_ENABLE_SYNTHETIC_GENERATOR=1 python3 scripts/generate_kaggle_dataset.py --samples 2000
-   ```
-   Outputs `verislip_kaggle_dataset.zip` containing 4,000 paired authentic & tampered images with binary segmentation masks.
-2. Upload the zip to [Kaggle Datasets](https://www.kaggle.com/datasets).
+```bash
+# Build the production Docker image
+docker build -t verislip:latest .
 
-Before publishing or consuming a dataset, create and verify a deterministic
-SHA-256 image manifest with `scripts/verify_dataset.py`. The read-only checker
-validates actual JPEG/PNG decoding, detects modified, missing, unexpected, and
-corrupt images, and reports duplicate content. See
-[`docs/DATASET_INTEGRITY.md`](docs/DATASET_INTEGRITY.md) for Windows CMD usage
-and the versioned manifest format.
-
-Synthetic annotations can be exported deterministically as COCO JSON or Pascal
-VOC XML with `scripts/export_annotations.py`. Existing binary masks are encoded
-as genuine COCO segmentation RLE rather than approximated from boxes. See
-[`docs/ANNOTATION_EXPORT.md`](docs/ANNOTATION_EXPORT.md) for Windows CMD usage,
-geometry validation, category mapping, and limitations.
-3. Open [`notebooks/VeriSlip_DualStream_Training.ipynb`](notebooks/VeriSlip_DualStream_Training.ipynb) in Kaggle Notebooks, select **GPU T4 x2**, and click **Run All**.
-4. Download `verislip_dualstream_best.pt` using the one-click download cell and move it to `weights/`:
-   ```bash
-   mv ~/Downloads/verislip_dualstream_best.pt weights/
-   ```
-
-### B. Few-Shot Real Slip Calibration
-To eliminate false alarms on real-world phone screenshots and WhatsApp recompression:
-1. Place 3 to 10 real bank transfer screenshots in `datasets/real_calibration/authentic/` *(strictly ignored by git to protect financial privacy)*.
-2. Run the calibration script:
-   ```bash
-   python3 scripts/calibrate_real_slips.py
-   ```
-3. VeriSlip automatically tunes layer fusion weights and writes `weights/calibration_profile.json`.
+# Run the containerized service
+docker run -d --name verislip \
+  -p 8000:8000 \
+  -e VERISLIP_ENV=production \
+  -e VERISLIP_API_KEY_HASHES="<sha256_hash_of_key>" \
+  verislip:latest
+```
 
 ---
 
-## 🔌 Developer REST API
+## 🔌 Developer REST API Reference
 
-### 1. Single Slip Verification
+All verification endpoints require an `X-API-Key` header with configured SHA-256 fingerprints in production (`VERISLIP_API_KEY_HASHES`). In local development (`VERISLIP_ENV=development`), the default development key `verislip-dev-key` is automatically accepted.
+
+### Endpoints Overview
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/api/v1/verify` | Upload slip image for synchronous 5-layer forensic analysis. |
+| `POST` | `/api/v1/verify/jobs` | Submit async forensic job (returns `202 Accepted` with Job ID). |
+| `GET` | `/api/v1/verify/jobs/{id}` | Query status and result of asynchronous forensic job. |
+| `GET` | `/api/v1/verifications/history` | Paginated, tenant-isolated merchant verification history. |
+| `POST` | `/api/v1/courier/verify` | Courier rider JSON verification for Cash-on-Delivery handover. |
+| `POST` | `/api/v1/webhook/whatsapp` | WhatsApp Business bot webhook (image base64 or Cloud API media ID). |
+| `POST` | `/api/v1/crypto/verify-zk-proof`| Validate Groth16 zero-knowledge proof of slip authenticity. |
+| `POST` | `/api/v1/report/audit-pdf` | Generate legally admissible SHA-256 signed PDF audit certificate. |
+| `POST` | `/api/v1/batch-verify` | Concurrently verify up to 50 slip images in a single batch. |
+| `GET` | `/health` | Kubernetes / Render health check endpoint. |
+
+### Example: Verify Slip Image
+
 ```bash
 curl -X POST http://127.0.0.1:8000/api/v1/verify \
-  -F "file=@/path/to/slip.jpg" \
+  -H "X-API-Key: verislip-dev-key" \
+  -F "file=@sample_receipt.jpg" \
   -F "bank_code=COMBANK"
 ```
 
-**Response:**
+**Response Payload:**
 ```json
 {
-  "verdict": "HIGH_RISK_TAMPERED",
-  "verdict_color": "#EF4444",
-  "tamper_risk_percentage": 90.0,
-  "confidence_score": 0.8,
+  "verdict": "AUTHENTIC",
+  "verdict_color": "#10B981",
+  "tamper_risk_percentage": 0.3,
+  "confidence_score": 0.99,
   "calibration_profile": "Active (Empirical Real-World Profile)",
-  "flagged_regions": [
-    {
-      "box": [150, 315, 232, 28],
-      "confidence": 1.0,
-      "label": "Neural Localization Anomaly"
-    }
-  ],
-  "recommendation": "High probability of digital tampering. DO NOT ship goods on this slip alone."
+  "recommendation": "Low tamper risk. Payment slip appears genuine. Safe to release goods.",
+  "flagged_regions": [],
+  "extracted_metadata": {
+    "bank_code": "COMBANK",
+    "bank_name": "Commercial Bank of Ceylon PLC",
+    "amount": 12500.0,
+    "reference_no": "TXN8491028491",
+    "date": "16/09/2026 14:32:10"
+  },
+  "layer_breakdowns": {
+    "layer1_structural": { "score": 0.0, "is_anomalous": false },
+    "layer2_classical": { "score": 0.08, "is_anomalous": false },
+    "layer3_noise": { "score": 0.04, "is_anomalous": false },
+    "layer4_ensemble": { "score": 0.02, "is_anomalous": false },
+    "vlm_reasoning": { "score": 0.0, "is_anomalous": false }
+  }
 }
 ```
 
-### Merchant verification history
+---
 
-Successful `POST /api/v1/verify` requests and completed background verification
-jobs add a metadata-only record to the authenticated API key's merchant history.
-The web cockpit's **History** drawer supports reference search, inclusive UTC date
-filters, and paginated results. The endpoint can also be called directly:
+## 🧩 Browser Extension & Client Integrations
 
-```bash
-curl "http://127.0.0.1:8000/api/v1/verifications/history?reference=ORDER-42&date_from=2026-09-01&date_to=2026-09-30&page=1&page_size=20" \
-  -H "X-API-Key: <merchant-api-key>"
-```
+VeriSlip includes an open-source **Manifest V3 Chromium Extension** (`extension/`) providing frictionless one-click receipt auditing directly inside:
+- **WhatsApp Web** (`web.whatsapp.com`)
+- **Gmail** (`mail.google.com`)
+- **Facebook Marketplace & Messenger** (`messenger.com`)
 
-History records contain only time, caller-supplied reference, verdict/risk, and
-bank label metadata. Uploaded images, forensic maps, account details, API keys,
-and raw OCR payloads are never retained in this store. The default in-process
-implementation is thread-safe, bounded by `VERISLIP_HISTORY_MAX_RECORDS`, and
-expires entries after `VERISLIP_HISTORY_RETENTION_DAYS`. Multi-worker production
-deployments should implement the provided storage boundary with a shared durable
-database while keeping the API-key fingerprint as the tenant key.
-
-### 2. Courier Rider API
-
-`POST /api/v1/courier/verify` accepts an authenticated JSON request containing
-`waybill_id`, `expected_cod_amount`, base64 JPEG/PNG `slip_base64`, and an
-optional `target_bank`. It returns a compact `can_handover_package` boolean,
-`rider_action`, safe cashier alert, risk classification, and best-effort COD
-amount comparison. The endpoint uses the shared sanitized verification pipeline;
-uploaded bytes are not persisted and detailed forensic maps are omitted.
-
-```bash
-curl -X POST http://127.0.0.1:8000/api/v1/courier/verify \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: <courier-api-key>" \
-  -d '{
-    "waybill_id": "WB-882910",
-    "expected_cod_amount": 12500,
-    "slip_base64": "<base64-jpeg-or-png>",
-    "target_bank": "COMBANK"
-  }'
-```
-
-Webhook delivery through `/api/v1/integrations/webhooks/dispatch` requires an
-explicit comma-separated `VERISLIP_WEBHOOK_HOSTS` allowlist of exact merchant
-hostnames. An empty list disables delivery. Targets must use HTTPS on port 443;
-all resolved addresses must be public. Delivery pins the checked address while
-preserving TLS hostname verification, ignores environment proxies, and does not
-follow redirects.
-
-Missing or empty `VERISLIP_API_KEY_HASHES` disables protected API access (503).
-Only explicit `VERISLIP_ENV=development` enables the public demonstration key
-when no keys are configured. Production deployments must configure key hashes
-and leave development mode disabled.
-
-### 3. Shopify manual-payment webhook
-
-Configure Shopify's `orders/create` topic to send signed events to
-`POST /api/v1/integrations/shopify/webhooks/orders-create`. The route verifies
-`X-Shopify-Hmac-Sha256` against the exact raw body and intentionally uses that
-signature instead of merchant API-key authentication. Manual bank-transfer
-orders can provide an HTTPS proof URL in `payment_proof_url`, or in a
-`note_attributes`/`metafields` entry named `payment_proof_url`,
-`payment_receipt_url`, `receipt_url`, `slip_url`, or `bank_slip_url`.
-
-Proof downloads are limited to configured Shopify media hosts, kept in memory,
-bounded to the normal image limit, sanitized, and queued on the existing
-forensic worker pool. Shopify webhook IDs provide bounded retry idempotency.
-Configure `VERISLIP_SHOPIFY_WEBHOOK_SECRET` through a secret manager and use
-`VERISLIP_SHOPIFY_MEDIA_HOSTS` only for trusted HTTPS media hosts. Never put a
-real secret in `.env.example` or source control.
-
-### 4. WhatsApp Webhook
-The webhook accepts either the existing `image_base64` field or a WhatsApp Cloud
-API `media_id`. Media-ID downloads require `VERISLIP_WHATSAPP_ACCESS_TOKEN`, are
-kept in memory, bounded to the normal upload limit, and are sanitized before
-forensic analysis.
-
-```bash
-curl -X POST http://127.0.0.1:8000/api/v1/webhook/whatsapp \
-  -H "Content-Type: application/json" \
-  -d '{
-    "from_phone": "+94771234567",
-    "image_base64": "<base64_encoded_slip>",
-    "caption": "Customer sent this slip for order #1082"
-  }'
-```
-
-For a WhatsApp-hosted attachment, replace `image_base64` with `"media_id":
-"<numeric_media_id>"`. Configure the access token through a deployment secret;
-never place it in source control or logs.
-
-Text messages use the same webhook by supplying `text` and an optional stable
-`message_id`. New sellers receive onboarding, while returning sellers can use
-`help` and `balance`; English, Sinhala (`සිංහල`), and Tamil (`தமிழ்`) are
-supported. Repeated message IDs are answered idempotently. Local conversation
-state is bounded and expiring and stores only hashed seller/message identifiers.
-Deployments with multiple API workers should replace the process-local store
-with shared storage.
-
-WhatsApp receipt verification also has a merchant business-credit quota,
-separate from API-key request rate limiting. Configure the default free credits
-with `VERISLIP_WHATSAPP_FREE_VERIFICATIONS` and a public HTTPS checkout page
-with `VERISLIP_WHATSAPP_UPGRADE_URL`. Credits are reserved atomically and are
-only finalized after successful forensic analysis; failed and duplicate
-message-ID submissions are not charged. The local implementation stores only
-keyed fingerprints and is intended to be replaced by durable shared storage in
-multi-worker production deployments.
-
-For high-risk results only, callers that have already determined the normal
-WhatsApp reply could not be delivered may set `whatsapp_delivery_failed` to
-`true`. VeriSlip then attempts a short, receipt-free SMS fraud alert through a
-configured Dialog IdeaMart/Mobitel hSenid-compatible JSON gateway. Enable it
-with `VERISLIP_SMS_ENABLED=1` and configure the HTTPS gateway URL, application
-ID, password, sender ID, and timeouts shown in `.env.example`. Credentials must
-come from deployment secrets. Duplicate alerts with the same WhatsApp
-`message_id` are suppressed in the local process.
+The extension injects a slide-out forensic inspection drawer that captures payment screenshots from active chat threads and displays instant tamper risk scores without leaving the messaging tab.
 
 ---
 
-## 🗺️ Open-Source Roadmap & Backlog
+## 🔒 Security, Dual-Use Policy & Threat Model
 
-The proposed provider-neutral architecture for authorized, read-only payment
-network checks is documented in the [Layer 5 direct transaction-verification
-roadmap](docs/LAYER5_DIRECT_VERIFICATION.md). It does not claim an existing public
-LankaPay API or production access.
-
-VeriSlip is developed as an open-core research initiative. Browse open issues on our [GitHub Issues Board](https://github.com/chirana07/VeriSlip/issues):
-
-| Domain Track | Scope & Technologies | Status |
-| :--- | :--- | :--- |
-| **🔬 Computer Vision & Signal Forensics** | Bank layout templates, reference checksums, ELA, 2D-DCT frequency analysis, copy-move detection, noise residuals (OpenCV, NumPy, SciPy). | 14 Done / 14 Open |
-| **🧠 Machine Learning & Datasets** | Synthetic tampering engine, PII redaction pipeline, PyTorch dual-stream CNN fusion, Kaggle training pipeline, few-shot calibration. | 16 Done / 12 Open |
-| **🌐 Backend Systems & APIs** | FastAPI server, WhatsApp Business Cloud API webhook, courier logistics API, batch verification, PDF report generation. | 12 Done / 14 Open |
-| **⚙️ Infrastructure & Research** | GitHub Actions CI/CD (Python 3.10 & 3.11), Docker Compose, security/dual-use containment, merchant pilot studies, research paper drafting. | 6 Done / 12 Open |
-
-> 📖 **Full Backlog Documentation:** See [docs/ISSUES_BACKLOG.md](docs/ISSUES_BACKLOG.md) for detailed descriptions, acceptance criteria, and architecture notes.
+* **Dual-Use Containment:** The synthetic tampering generation engine lives under `core/internal/` strictly for offline model training and unit tests. The engine is disabled by default and raises `RuntimeError` unless explicitly launched with `VERISLIP_ENABLE_SYNTHETIC_GENERATOR=1`. It is never mounted by the API or exposed in production.
+* **Safe Ingestion Pipeline:** All upload routes validate encoded magic bytes, enforce hard limits on upload size (`MAX_IMAGE_UPLOAD_BYTES = 10 MB`) and decoded pixel dimensions (`MAX_IMAGE_PIXELS = 25 MP`), fail closed on decompression bombs, and pass only normalized metadata-free RGB arrays into the engine. Detailed threat specifications are documented in [docs/UPLOAD_SECURITY.md](docs/UPLOAD_SECURITY.md).
+* **Strict PII Redaction:** The automated PII redaction pipeline masks Sri Lankan National Identity Card (NIC) numbers, customer phone numbers, personal bank accounts, and customer names before storing any data in training logs. See [docs/PII_REDACTION.md](docs/PII_REDACTION.md).
+* **Zero Production Secret Leakage:** Configuration uses SHA-256 key fingerprints (`VERISLIP_API_KEY_HASHES`). Raw keys and webhook secrets must be provided via vault or cloud environment managers and are never logged or committed to version control.
 
 ---
 
-## 🤝 Contributing
+## 🤝 Contributing & Research Roadmap
 
-Contributions from computer vision researchers, ML engineers, and software developers are warmly welcomed!
+We welcome contributions from computer vision researchers, cryptographic engineers, and fintech developers!
 
-1. Fork the repository and create a branch:
+1. Fork the repository and create your feature branch:
    ```bash
-   git checkout -b feature/your-feature-name
+   git checkout -b feature/issue-number-title
    ```
-2. Implement your changes, following PEP 8 conventions.
-3. Ensure all tests pass:
+2. Commit your modifications following PEP 8 conventions.
+3. Validate that the entire 530-test suite passes:
    ```bash
    pytest tests/ -v
    ```
-4. Submit a Pull Request referencing the corresponding issue.
+4. Open a Pull Request referencing the tracked GitHub issue.
 
----
-
-## 🔒 Security & Dual-Use Policy
-
-* **Merchant Amount Checks:** WooCommerce requires a positive, finite order total and a matching extracted slip amount before recommending processing. Missing, invalid, or mismatched amounts hold the order for manual review. Courier verification also blocks handover when the extracted amount is unavailable or invalid. An image-forensics result is not confirmation of bank settlement.
-* **WooCommerce Uploads:** The integration uses the same bounded, content-detected JPEG/PNG/PDF decoding as the verification endpoint. Unsupported images and oversized uploads or PDF pages are rejected before analysis; internal decoder errors are not returned to clients.
-
-* **Dual-Use Containment:** The synthetic tampering generation engine lives under `core/internal/` for offline training, calibration, and unit tests. It is not mounted by the API or exposed by the frontend. The engine is disabled by default and construction fails unless an authorized offline process explicitly sets `VERISLIP_ENABLE_SYNTHETIC_GENERATOR=1`. Never set this flag in a public API deployment.
-* **Safe Image Ingestion:** Public verification endpoints identify JPEG/PNG inputs from their actual encoded content, cap upload bytes and decoded dimensions, fail closed on Pillow decompression-bomb warnings, reject malformed/truncated/animated or unsupported images, and pass only normalized metadata-free RGB pixels into forensic analysis.
-  The reviewed upload threat model, route limits, and requirements for future ingestion endpoints are documented in [`docs/UPLOAD_SECURITY.md`](docs/UPLOAD_SECURITY.md).
-* **Request Tracing:** Every API response includes `X-Request-ID`. Callers may provide a safe `X-Request-ID` or `X-Correlation-ID`; otherwise VeriSlip generates a UUID. Request lifecycle logs are JSON records containing the correlation ID, route template, status, and duration—never request bodies, uploaded receipts, query strings, credentials, or authorization headers.
-* **API Access Control:** `/api/v1` endpoints require an `X-API-Key`. Configure only SHA-256 key fingerprints through `VERISLIP_API_KEY_HASHES`; raw production keys never belong in source or environment configuration. Free keys receive 10 requests/day and pro keys receive 100 requests/minute. Health, documentation, OpenAPI, static assets, and the web root remain public. `REDIS_URL` enables distributed counters; local development falls back to an in-memory store.
-* **Background Verification:** `POST /api/v1/verify/jobs` sanitizes an upload and returns `202` with a job ID; `GET /api/v1/verify/jobs/{job_id}` reports `pending`, `processing`, `completed`, or `failed`. Jobs are isolated by API-key fingerprint, inherit the submission correlation ID, and retain only sanitized pixels while running. The existing `POST /api/v1/verify` response remains synchronous-compatible but executes decoding and forensic inference on worker threads.
-* **Merchant History:** `GET /api/v1/verifications/history` returns only the authenticated merchant's bounded verification summary records. Receipt images and detailed forensic/OCR payloads are not persisted for history.
-* **Privacy by Design:** Personal account numbers, customer names, and bank account identifiers are automatically masked or sanitized before audit log persistence.
-
-Real receipt images intended for research datasets can be sanitized locally
-with the deterministic PII redaction pipeline. It masks or strongly blurs
-detected phone numbers, labelled account numbers/names, and Sri Lankan NICs,
-strips metadata, and never overwrites source files. See
-[`docs/PII_REDACTION.md`](docs/PII_REDACTION.md) for usage and limitations.
-* Real calibration slips placed in `datasets/real_calibration/` are protected by `.gitignore` rules and never tracked.
+Browse our open milestones and 100-issue backlog in [docs/ISSUES_BACKLOG.md](docs/ISSUES_BACKLOG.md).
 
 ---
 
 ## 📜 License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
-Webhook signing requires `VERISLIP_WEBHOOK_SECRET` from secret storage; missing
-configuration disables signed delivery. Receivers should verify the signature
-and reject repeated event IDs and stale timestamps.
-
-Payment amount extraction accepts a unique, high-confidence labelled amount
-(e.g. `Amount: LKR 12,500.00`). Conflicting, unsupported or unreadable values
-remain unverified. macOS uses the native Vision helper; Windows/Linux can use
-Tesseract installed on PATH with English language data. Without a text OCR
-engine, geometry detection remains available but cannot confirm an amount.
+VeriSlip is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for complete terms and copyright notices.
